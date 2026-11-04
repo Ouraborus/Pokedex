@@ -87,7 +87,6 @@ struct URLSessionAPIClient: APIClient {
     }
 }
 
-
 extension JSONDecoder {
     static var pokeAPI: JSONDecoder {
         let decoder = JSONDecoder()
