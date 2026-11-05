@@ -8,7 +8,7 @@
 import Foundation
 
 struct NamedResource: Decodable, Sendable {
-    let name: String?
+    let name: String
     let url: URL
 }
 
@@ -18,7 +18,7 @@ struct PokemonListResponse: Decodable, Sendable {
     let results: [NamedResource]
 }
 
-struct PokemonDetailDTO: Decodable, Sendable {
+nonisolated struct PokemonDetailDTO: Decodable, Sendable {
     let id: Int
     let name: String
     let height: Int
@@ -27,20 +27,20 @@ struct PokemonDetailDTO: Decodable, Sendable {
     let stats: [StatEntry]
     let sprites: Sprite
     
-    struct TypeEntry: Decodable, Sendable {
+    nonisolated struct TypeEntry: Decodable, Sendable {
         let slot: Int
         let type: NamedResource
     }
     
-    struct StatEntry: Decodable, Sendable {
+    nonisolated struct StatEntry: Decodable, Sendable {
         let baseStat: Int
         let stat: NamedResource
     }
     
-    struct Sprite: Decodable, Sendable {
+    nonisolated struct Sprite: Decodable, Sendable {
         let other: Other
         
-        struct Other: Decodable, Sendable {
+        nonisolated struct Other: Decodable, Sendable {
             let officialArtwork: ArtWork
             
             enum CodingKeys: String, CodingKey {
@@ -48,8 +48,24 @@ struct PokemonDetailDTO: Decodable, Sendable {
             }
         }
         
-        struct ArtWork: Decodable, Sendable {
+        nonisolated struct ArtWork: Decodable, Sendable {
             let frontDefault: URL?
         }
+    }
+}
+
+nonisolated struct SpeciesDTO: Decodable, Sendable {
+    let flavorTextEntries: [FlavorText]
+
+    nonisolated struct FlavorText: Decodable, Sendable {
+        let flavorText: String
+        let language: NamedResource
+    }
+
+    var englishDescription: String {
+        let raw = flavorTextEntries.first { $0.language.name == "en" }?.flavorText ?? ""
+        return raw
+            .replacingOccurrences(of: "\n", with: " ")
+            .replacingOccurrences(of: "\u{0C}", with: " ")   // PokeAPI trae saltos de página
     }
 }
