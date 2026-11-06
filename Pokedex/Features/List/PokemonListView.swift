@@ -15,13 +15,9 @@ struct PokemonListView: View {
     }
     
     var body: some View {
-        NavigationStack {
-            content
-                .navigationTitle("Pokedex")
-        }
-        .task {
-            await viewModel.load()
-        }
+        content
+            .navigationTitle("Pokedex")
+            .task { await viewModel.load() }
     }
     
     @ViewBuilder
@@ -32,7 +28,7 @@ struct PokemonListView: View {
         case .loaded(let pokemons):
             List {
                 ForEach(pokemons) { item in
-                    NavigationLink(value: 1) {
+                    NavigationLink(value: Route.detail(id: item.id)) {
                         PokemonRowView(pokemon: item)
                     }
                     .onAppear {

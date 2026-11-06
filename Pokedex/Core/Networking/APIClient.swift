@@ -26,7 +26,8 @@ struct URLSessionAPIClient: APIClient {
     
     init(
         baseURL: URL = URL(string: "https://pokeapi.co/api/v2")!,
-        session: URLSession = .shared) {
+        session: URLSession = .shared
+    ) {
         self.baseURL = baseURL
         self.session = session
     }
@@ -62,7 +63,7 @@ struct URLSessionAPIClient: APIClient {
         
         // Add Query Items
         if !endpoint.queryParams.isEmpty {
-            urlComponents.queryItems?.append(contentsOf: endpoint.queryParams)
+            urlComponents.queryItems = urlComponents.queryItems ?? [] + endpoint.queryParams
         }
         
         // Build URL Request
@@ -74,6 +75,7 @@ struct URLSessionAPIClient: APIClient {
     func perform(_ request: URLRequest) async throws -> (Data, URLResponse) {
         // Try request and return
         do {
+            print("GET", request.url?.absoluteString ?? "")
             return try await session.data(for: request)
         } catch let error as URLError {
             // Throw errors based on response

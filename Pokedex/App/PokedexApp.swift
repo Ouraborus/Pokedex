@@ -13,7 +13,7 @@ struct PokedexApp: App {
 
     var body: some Scene {
         WindowGroup {
-            PokemonListView(repository: dependencies.repository)
+            RootView(dependencies: .live())
         }
     }
 }
